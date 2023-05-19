@@ -1,4 +1,4 @@
-# ECE452-G32
+# CS446/CS646/ECE452-G32
 
 | Date       | Han Su | Hangning | Jalynn | Xin Cheng | Bi Cheng | Chen-Yi | Task
 |------------|--------|----------|--------|-----------|----------|---------|-------

@@ -1,9 +1,11 @@
 const express = require("express");
+const cookieParser = require("cookie-parser");
 require("dotenv").config();
 require("express-async-errors");
 
 const { connectDB } = require("./config/database");
 const { globalErrorHandler } = require("./middlewares/errorHandling");
+// const { verifyToken } = require("./middlewares/auth");
 
 const authRoutes = require("./routes/authRoutes");
 
@@ -12,6 +14,7 @@ const port = process.env.PORT || 8080;
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.get("/", (_, res) => {
   res.send("FarmWise Backend Server");

@@ -10,14 +10,19 @@ class AppError extends Error {
 }
 
 const mapErrorStatusToStatusCode = (status) => {
-  return {
-    NOT_FOUND: 404,
-    UNAUTHORIZED: 401,
-    BAD_REQUEST: 400,
-    DUPLICATE_RECORD: 409,
-    INTERNAL_SERVER_ERROR: 500,
-    THIRD_PARTY_ERROR: 400,
-  }[status];
+  switch (status) {
+    case "BAD_REQUEST":
+    case "THIRD_PARTY_ERROR":
+      return 400;
+    case "UNAUTHORIZED":
+      return 401;
+    case "NOT_FOUND":
+      return 404;
+    case "DUPLICATE_RECORD":
+      return 409;
+    default:
+      return 500;
+  }
 };
 
 module.exports = {

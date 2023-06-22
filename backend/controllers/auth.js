@@ -1,5 +1,3 @@
-const bcrypt = require("bcryptjs");
-
 const { AppError } = require("../utils/errors");
 const authService = require("../services/authService");
 const { formatSuccessResponse } = require("../utils/formatResponse");
@@ -13,15 +11,7 @@ exports.registerUser = async (req, res) => {
 
   await authService.checkDuplicateUser(username);
 
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  const createdUser = await authService.createUser(
-    username,
-    email,
-    hashedPassword
-  );
-
-  createdUser.password = "";
+  const createdUser = await authService.createUser(username, email, password);
 
   const jwtToken = authService.createJWTSignature(createdUser);
 
@@ -29,4 +19,21 @@ exports.registerUser = async (req, res) => {
     .status(201)
     .setHeader("Set-Cookie", `FarmWiseKey=${jwtToken}`)
     .json(formatSuccessResponse(createdUser));
+};
+
+exports.loginUser = async (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    throw new AppError("BAD_REQUEST");
+  }
+
+  const user = await authService.loginUser(username, password);
+
+  const jwtToken = authService.createJWTSignature(user);
+
+  res
+    .status(200)
+    .setHeader("Set-Cookie", `FarmWiseKey=${jwtToken}`)
+    .json(formatSuccessResponse(user));
 };

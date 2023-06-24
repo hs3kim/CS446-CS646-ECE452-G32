@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">FarmWise</string>
+    <string name="homeFragment">home fragment</string>
+    <string name="farmFragment">farm fragment</string>
+    <string name="marketFragment">market fragment</string>
+    <string name="charityFragment">charity fragment</string>
+</resources>

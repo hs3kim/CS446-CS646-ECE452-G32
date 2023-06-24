@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Farmwise</string>
+    <string name="title">FarmWise</string>
+    <string name="register">Continue</string>
+    <string name="login">Login</string>
+    <string name="loginMore">Click to register now</string>
+    <string name="registerMore">Or</string>
+    <string name="username">Username</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="password2">Password Confirmation</string>
+</resources>

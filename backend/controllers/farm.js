@@ -6,8 +6,6 @@ exports.createFarm = async (req, res) => {
   const { name } = req.body;
   const user = req.user || {};
 
-  console.log({ user });
-
   if (!user || !user.userID || !name) {
     throw new AppError("BAD_REQUEST");
   }

@@ -31,5 +31,5 @@ exports.getInventory = async (req, res) => {
 
   const inventory = await inventoryService.getInventory(farm._id);
 
-  res.status(201).json(formatSuccessResponse(inventory));
+  res.status(200).json(formatSuccessResponse(inventory));
 };

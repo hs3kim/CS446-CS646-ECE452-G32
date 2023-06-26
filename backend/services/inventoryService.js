@@ -18,8 +18,8 @@ exports.addCropInventory = async (farmCode, productInfo) => {
         };
         return invenEntry
     } else {
-        const invenEntry = await ropInventory.create({
-            farm: farm.id, 
+        const invenEntry = await cropInventory.create({
+            farm: farm._id, 
             product: product, 
             count: count
         });

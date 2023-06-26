@@ -21,7 +21,6 @@ exports.get_query_dict = (text) => {
     nounTags = ['NN', 'NNS', 'NNP', 'NNPS']
 
     const taggedTokens = posTagger.tag(tokens);
-    console.log(taggedTokens.taggedWords);
     let quantity, item;
 
     for (let taggedToken of taggedTokens.taggedWords) {
@@ -29,7 +28,6 @@ exports.get_query_dict = (text) => {
             quantity = parseInt(taggedToken.token);
             if (isNaN(quantity)) {
                 quantity = wordsToNumbers.wordsToNumbers(taggedToken.token)
-                console.log(quantity)
             }
         } else if (nounTags.includes(taggedToken.tag)) {
             item = nounInflector.singularize(taggedToken.token);

@@ -9,6 +9,7 @@ const { globalErrorHandler } = require("./middlewares/errorHandling");
 // const { verifyToken } = require("./middlewares/auth");
 
 const authRoutes = require("./routes/authRoutes");
+const inventoryRoutes = require("./routes/inventoryRoutes");
 
 const port = process.env.PORT || 8080;
 
@@ -23,6 +24,7 @@ app.get("/", (_, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/inventory", inventoryRoutes);
 
 app.use(globalErrorHandler);
 

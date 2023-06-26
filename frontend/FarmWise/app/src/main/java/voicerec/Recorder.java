@@ -1,61 +1,68 @@
 package voicerec;
 
-import static android.provider.Settings.System.getString;
-import android.app.Application;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+import edu.cmu.sphinx.api.Configuration;
+import edu.cmu.sphinx.api.LiveSpeechRecognizer;
+import edu.cmu.sphinx.api.SpeechResult;
+import edu.cmu.sphinx.result.WordResult;
+
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
+import android.content.res.AssetManager;
 
-import androidx.annotation.NonNull;
+public class Recorder {
+    public void start_recording(Context context) {
+        Configuration configuration = new Configuration();
 
-import com.justai.aimybox.Aimybox;
-import com.justai.aimybox.assistant.api.DummyDialogApi;
-import com.justai.aimybox.components.AimyboxAssistantViewModel;
-import com.justai.aimybox.components.AimyboxProvider;
-import com.justai.aimybox.core.Config;
-import com.justai.aimybox.speechkit.google.platform.GooglePlatformTextToSpeech;
-import com.justai.aimybox.speechkit.pocketsphinx.*;
-//import com.justai.aimybox.speechkit.pocketsphinx.PocketsphinxAssets;
-//import com.justai.aimybox.speechkit.pocketsphinx.PocketsphinxRecognizerProvider;
-//import com.justai.aimybox.speechkit.pocketsphinx.PocketsphinxSpeechToText;
-//import com.justai.aimybox.speechkit.pocketsphinx.PocketsphinxVoiceTrigger;
+        // Set the path to the configuration file
+        configuration.setAcousticModelPath("assets/model");
+        configuration.setDictionaryPath("assets/model/dictionary.dict");
+        configuration.setLanguageModelPath("assets/model/en-70k-0.1.lm");
 
-import java.util.Locale;
+        LiveSpeechRecognizer recognizer = null;
+        try {
+            recognizer = new LiveSpeechRecognizer(configuration);
+            recognizer.startRecognition(true);
 
-public class Recorder extends Application implements AimyboxProvider{
-    @Override
-    public Aimybox getAimybox() {
-        return createAimybox(this);
-    }
-    private Aimybox createAimybox(Context context) {
-        PocketsphinxAssets assets = PocketsphinxAssets.Companion.fromApkAssets(
-                context,
-                "model",
-                "model" + "/dictionary.dict",
-                "model" + "/grammar.gram",
-                ""
-        );
-        PocketsphinxRecognizerProvider provider = new PocketsphinxRecognizerProvider(assets,16000, 1e-40f);
+            System.out.println("Listening for speech...");
 
-        GooglePlatformTextToSpeech textToSpeech = new GooglePlatformTextToSpeech(context, Locale.getDefault(), true);
-        PocketsphinxSpeechToText speechToText = new PocketsphinxSpeechToText(provider, assets.getGrammarFilePath(), 5000, 5000L);
-        String keyphrase = "one two three";
-        PocketsphinxVoiceTrigger voiceTrigger = new PocketsphinxVoiceTrigger(provider, keyphrase);//getString(R.string.keyphrase));
-        DummyDialogApi dialogApi = new DummyDialogApi();
+            SpeechResult result;
+            while ((result = recognizer.getResult()) != null) {
+                // Process each word result
+                for (WordResult wordResult : result.getWords()) {
+                    String word = wordResult.getWord().getSpelling();
+                    double startTime = wordResult.getTimeFrame().getStart();
+                    double endTime = wordResult.getTimeFrame().getEnd();
 
-        Config config = Config.Companion.create(speechToText, textToSpeech, dialogApi, builder -> {
-            builder.setVoiceTrigger(voiceTrigger);
-            return null;
+                    // Filter only the recognized words during voice activity
+                    if (isSpeechActive(startTime, endTime)) {
+                        System.out.println("Recognized: " + word);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (recognizer != null) {
+                recognizer.stopRecognition();
+            }
         }
-        );
-//        config.Voice(voiceTrigger);
-
-        return new Aimybox(config, context);
     }
 
-    @NonNull
-    @Override
-    public AimyboxAssistantViewModel.Factory getViewModelFactory() {
-        return null;
+    private static boolean isSpeechActive(double startTime, double endTime) {
+        // Implement your voice activity detection logic here
+        // Check if the duration between startTime and endTime exceeds a threshold
+        // to consider it as an active speech segment
+        double threshold = 0.5; // Adjust this threshold as needed
+        return (endTime - startTime) > threshold;
     }
 }
+
 
 

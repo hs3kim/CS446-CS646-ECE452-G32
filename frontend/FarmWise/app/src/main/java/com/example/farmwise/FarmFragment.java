@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.justai.aimybox.Aimybox;
+//import com.justai.aimybox.Aimybox;
 
 import voicerec.Recorder;
 
@@ -71,13 +71,14 @@ public class FarmFragment extends Fragment {
         Button aimyboxButton = view.findViewById(R.id.farmbutton);
 
         // Set an OnClickListener for the button
+        Context context = requireContext(); // Use the appropriate context here
+
+        Recorder recorder = new Recorder();
         aimyboxButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Context context = requireContext(); // Use the appropriate context here
-
-                Recorder recorder = new Recorder();
-                Aimybox aimybox = recorder.getAimybox();
+                System.out.println("teststststs");
+                recorder.start_recording(context);
             }
         });
         return view;

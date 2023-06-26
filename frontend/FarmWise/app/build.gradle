@@ -37,11 +37,13 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-    implementation 'org.webrtc:google-webrtc:1.0.32006'
-    implementation 'com.just-ai.aimybox:components:0.17.7-alpha.1'
-    implementation 'com.just-ai.aimybox:google-platform-speechkit:0.17.7-alpha.1'
-    implementation 'com.just-ai.aimybox:dummy-api:0.17.7-alpha.1'
-    implementation 'com.just-ai.aimybox:core:0.17.7-alpha.1'
-    implementation 'com.just-ai.aimybox:pocketsphinx-speechkit:0.17.7-alpha.1'
+//    implementation 'org.webrtc:google-webrtc:1.0.32006'
+//    implementation 'com.just-ai.aimybox:components:0.17.7-alpha.1'
+//    implementation 'com.just-ai.aimybox:google-platform-speechkit:0.17.7-alpha.1'
+//    implementation 'com.just-ai.aimybox:dummy-api:0.17.7-alpha.1'
+//    implementation 'com.just-ai.aimybox:core:0.17.7-alpha.1'
+//    implementation 'com.just-ai.aimybox:pocketsphinx-speechkit:0.17.7-alpha.1'
+    implementation 'edu.cmu.sphinx:sphinx4-core:5prealpha-SNAPSHOT'
+    implementation 'edu.cmu.sphinx:sphinx4-data:5prealpha-SNAPSHOT'
 
 }

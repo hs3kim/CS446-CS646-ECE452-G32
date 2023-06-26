@@ -4,4 +4,9 @@
     <string name="farmFragment">farm fragment</string>
     <string name="marketFragment">market fragment</string>
     <string name="charityFragment">charity fragment</string>
+
+    <string name="prompt">Your assistant is ready! Tap on the button below to start recognition.</string>
+    <string name="initial_phrase">How can I help you?</string>
+    <string name="keyphrase">one two three</string>
+
 </resources>

@@ -13,4 +13,10 @@
         android:layout_gravity="center"
         />
 
+    <Button
+        android:id="@+id/farmbutton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Button" />
+
 </FrameLayout>

@@ -1,4 +1,5 @@
-const { CropInventory, Farm } = require("../models/inventory");
+const { CropInventory } = require("../models/inventory");
+const { Farm } = require("../models/farm");
 const { AppError } = require("../utils/errors");
 
 exports.addCropInventory = async (farmCode, productInfo) => {

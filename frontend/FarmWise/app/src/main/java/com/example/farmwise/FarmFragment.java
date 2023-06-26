@@ -1,5 +1,6 @@
 package com.example.farmwise;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,6 +8,11 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
+import com.justai.aimybox.Aimybox;
+
+import voicerec.Recorder;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,6 +65,22 @@ public class FarmFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_farm, container, false);
+        View view = inflater.inflate(R.layout.fragment_farm, container, false);
+
+        // Find the button by its ID
+        Button aimyboxButton = view.findViewById(R.id.farmbutton);
+
+        // Set an OnClickListener for the button
+        aimyboxButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Context context = requireContext(); // Use the appropriate context here
+
+                Recorder recorder = new Recorder();
+                Aimybox aimybox = recorder.getAimybox();
+            }
+        });
+        return view;
+//        return inflater.inflate(R.layout.fragment_farm, container, false);
     }
 }

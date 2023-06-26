@@ -13,4 +13,4 @@
 .externalNativeBuild
 .cxx
 local.properties
-frontend/FarmWise/app/src/main/assets/*
+/frontend/FarmWise/app/src/main/assets/model/en-70k-0.1.lm

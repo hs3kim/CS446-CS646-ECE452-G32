@@ -13,7 +13,6 @@
     "express-async-errors": "^3.1.1",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.3.1",
-    "mongoose-auto-increment": "^5.0.1",
     "natural": "^6.5.0",
     "words-to-numbers": "^1.5.1"
   },

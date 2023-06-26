@@ -22,5 +22,4 @@ cropInventorySchema.index({ farm: 1, product: 1 }, { unique: true });
 const Farm = mongoose.model('Farm', farmSchema);
 const cropInventory = mongoose.model('cropInventory', cropInventorySchema);
 
-module.exports = { Farm };
-module.exports = { cropInventory };
+module.exports = { Farm, cropInventory }

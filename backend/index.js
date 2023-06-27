@@ -6,10 +6,11 @@ require("express-async-errors");
 
 const { connectDB } = require("./config/database");
 const { globalErrorHandler } = require("./middlewares/errorHandling");
-// const { verifyToken } = require("./middlewares/auth");
+const { verifyToken } = require("./middlewares/auth");
 
 const authRoutes = require("./routes/authRoutes");
 const inventoryRoutes = require("./routes/inventoryRoutes");
+const farmRoutes = require("./routes/farmRoutes");
 
 const port = process.env.PORT || 8080;
 
@@ -25,6 +26,7 @@ app.get("/", (_, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/inventory", inventoryRoutes);
+app.use("/api/farm", verifyToken, farmRoutes);
 
 app.use(globalErrorHandler);
 

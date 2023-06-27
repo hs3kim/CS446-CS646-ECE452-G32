@@ -1,12 +1,22 @@
 package com.example.farmwise;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
+
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.example.farmwise.databinding.FragmentHomeBinding;
+import com.google.android.material.snackbar.Snackbar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,6 +56,10 @@ public class HomeFragment extends Fragment {
         return fragment;
     }
 
+    private FragmentHomeBinding binding;
+
+    AlertDialog dialog;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +72,97 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        binding = FragmentHomeBinding.inflate(getLayoutInflater(), container, false);
+        View view = binding.getRoot();
+
+        buildDialog();
+
+        binding.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Snackbar.make(view, "Clicked on FAB", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                dialog.show();
+            }
+        });
+
+
+        return view;
+    }
+
+    public void ondDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    private void buildDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        View view = getLayoutInflater().inflate(R.layout.home_add_dialog, null);
+
+        EditText farmName = view.findViewById(R.id.farmNameEdit);
+        EditText farmCode = view.findViewById(R.id.farmCodeEdit);
+
+        builder.setView(view);
+        builder.setTitle("Join a farm")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        addFarm(farmName.getText().toString(), farmCode.getText().toString());
+                        farmName.setText("");
+                        farmCode.setText("");
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        farmName.setText("");
+                        farmCode.setText("");
+                    }
+                });
+        dialog = builder.create();
+    }
+
+    private void addFarm(String farmName, String farmCode) {
+        View view = getLayoutInflater().inflate(R.layout.home_farm_card, null);
+
+        // Clickable buttons
+        ImageButton delete = view.findViewById(R.id.delete_farm);
+        CardView card = view.findViewById(R.id.farmCard);
+
+        // Set farm name
+        TextView farmNameView = view.findViewById(R.id.farm_name);
+        farmNameView.setText(farmName);
+
+        // Set farm code
+        TextView farmCodeView = view.findViewById(R.id.farm_code);
+        farmCodeView.setText("#" + farmCode);
+
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                binding.container.removeView(view);
+            }
+        });
+
+        card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public  void onClick(View v) {
+                Snackbar.make(view, "View " + farmName, Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
+
+                replaceFragment(new fragment_home_farm_details());
+            }
+        });
+
+        binding.container.addView(view);
+
+    }
+
+    private void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getParentFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.main_frame_layout, fragment);
+        fragmentTransaction.commit();
+
     }
 }

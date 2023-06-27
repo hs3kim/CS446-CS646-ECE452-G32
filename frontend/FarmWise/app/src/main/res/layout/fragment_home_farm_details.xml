@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/home_background"
+    tools:context=".fragment_home_farm_details">
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/home_FAB_desc"
+        android:src="@drawable/baseline_add_24"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="16dp"
+        />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="30dp"
+        >
+
+        <TextView
+            android:id="@+id/farmName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bob's Farm"
+            android:textSize="16sp"
+            android:textColor="@color/dark_green"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+
+            />
+
+        <TextView
+            android:id="@+id/inventory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Inventory"
+            android:textSize="32sp"
+            android:textColor="@color/dark_green"
+            app:layout_constraintTop_toBottomOf="@+id/farmName"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="10dp"
+            app:srcCompat="@drawable/arrow_left_circle"
+            app:layout_constraintTop_toBottomOf="@+id/inventory"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/usercircle"
+            app:layout_constraintBottom_toBottomOf="@+id/inventory"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView"
+            app:layout_constraintBottom_toBottomOf="parent"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <FrameLayout
+                    android:id="@+id/itemCardFrame"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/inventoryItemCard"
+                        android:layout_width="150dp"
+                        android:layout_height="200dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginVertical="10dp"
+                        app:cardBackgroundColor="@color/cardview_green"
+                        app:cardCornerRadius="8dp"
+                        app:cardElevation="5dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                            android:layout_width="120dp"
+                            android:layout_height="120dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_margin="20dp"
+                            android:elevation="3dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/corn" />
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom|left"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginBottom="10dp"
+                            android:elevation="3dp"
+                            >
+                            <TextView
+                                android:id="@+id/farm_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Name: Corn"
+                                android:textSize="14sp" />
+                            <TextView
+                                android:id="@+id/farm_code"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/farm_name"
+                                android:text="Count: 200" />
+                        </RelativeLayout>
+
+
+                        <ImageButton
+                            android:id="@+id/delete_item"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom|right"
+                            android:src="@drawable/baseline_delete_24" />
+
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/inventoryItemCard2"
+                        android:layout_width="150dp"
+                        android:layout_height="200dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginVertical="10dp"
+                        app:cardBackgroundColor="@color/cardview_green"
+                        app:cardCornerRadius="8dp"
+                        app:cardElevation="5dp"
+                        android:layout_gravity="top|right"
+                        >
+
+                        <ImageView
+                            android:layout_width="120dp"
+                            android:layout_height="120dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_margin="20dp"
+                            android:elevation="3dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/apple" />
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom|left"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginBottom="10dp"
+                            android:elevation="3dp"
+                            >
+                            <TextView
+                                android:id="@+id/farm_name2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Name: Apple"
+                                android:textSize="14sp" />
+                            <TextView
+                                android:id="@+id/farm_code2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Count: 80"
+                                android:layout_below="@id/farm_name2"
+                                />
+                        </RelativeLayout>
+
+
+                        <ImageButton
+                            android:id="@+id/delete_item2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom|right"
+                            android:src="@drawable/baseline_delete_24" />
+
+                    </androidx.cardview.widget.CardView>
+
+                </FrameLayout>
+
+
+
+
+
+            </LinearLayout>
+        </ScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</FrameLayout>

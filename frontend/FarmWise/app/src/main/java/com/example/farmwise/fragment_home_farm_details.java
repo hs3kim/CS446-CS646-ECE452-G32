@@ -7,12 +7,15 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.farmwise.databinding.FragmentHomeFarmDetailsBinding;
+import com.google.android.material.snackbar.Snackbar;
+
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link FarmFragment#newInstance} factory method to
+ * Use the {@link fragment_home_farm_details#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FarmFragment extends Fragment {
+public class fragment_home_farm_details extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -23,9 +26,11 @@ public class FarmFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public FarmFragment() {
+    public fragment_home_farm_details() {
         // Required empty public constructor
     }
+
+    private FragmentHomeFarmDetailsBinding binding;
 
     /**
      * Use this factory method to create a new instance of
@@ -33,11 +38,11 @@ public class FarmFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment FarmFragment.
+     * @return A new instance of fragment fragment_home_farm_details.
      */
     // TODO: Rename and change types and number of parameters
-    public static FarmFragment newInstance(String param1, String param2) {
-        FarmFragment fragment = new FarmFragment();
+    public static fragment_home_farm_details newInstance(String param1, String param2) {
+        fragment_home_farm_details fragment = new fragment_home_farm_details();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -58,6 +63,34 @@ public class FarmFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_farm, container, false);
+        binding = FragmentHomeFarmDetailsBinding.inflate(getLayoutInflater(), container, false);
+        View view = binding.getRoot();
+
+        binding.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Add new item", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
+
+        binding.deleteItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.itemCardFrame.removeView(binding.inventoryItemCard);
+            }
+        });
+
+        binding.deleteItem2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.itemCardFrame.removeView(binding.inventoryItemCard2);
+            }
+        });
+
+        return view;
     }
+
+
 }

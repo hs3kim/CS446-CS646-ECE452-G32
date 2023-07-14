@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">FarmWise</string>
+
+    <string name="title">FarmWise</string>
+    <string name="register">Continue</string>
+    <string name="login">Login</string>
+    <string name="loginMore">Click to register now</string>
+    <string name="registerMore">Or</string>
+    <string name="username">Username</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="password2">Password Confirmation</string>
+
+    <string name="homeFragment">home fragment</string>
+    <string name="homeTitle">Farm List</string>
+    <string name="farmName1">Bob\'s Farm</string>
+    <string name="farmName2">Alice\'s Farm</string>
+    <string name="farmName3">Mallory\'s Farm</string>
+    <string name="farmName4">Eve\'s Farm</string>
+    <string name="home_FAB_desc"></string>
+    <string name="home_search_hint">Farm search</string>
+
+    <string name="farmFragment">farm fragment</string>
+    <string name="marketFragment">market fragment</string>
+    <string name="charityFragment">charity fragment</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+</resources>

@@ -28,7 +28,7 @@ app.get("/", (_, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/inventory", inventoryRoutes);
 app.use("/api/farm", verifyToken, farmRoutes);
-app.use("/api/user", userRoutes);
+app.use("/api/user", verifyToken, userRoutes);
 
 app.use(globalErrorHandler);
 

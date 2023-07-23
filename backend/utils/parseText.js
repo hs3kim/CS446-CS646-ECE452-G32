@@ -50,5 +50,6 @@ exports.getQueryDict = (text) => {
     }
   }
   const dict = {"action":classifier.classify(modifiedText), dict:{'item':item, 'quantity': quantity}}
+  console.log({ text, dict });
   return dict
 };

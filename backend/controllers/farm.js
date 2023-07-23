@@ -17,6 +17,24 @@ exports.createFarm = async (req, res) => {
   res.status(201).json(formatSuccessResponse(newFarm));
 };
 
+exports.editFarm = async (req, res) => {
+  const { name, code } = req.body;
+  const user = req.user || {};
+
+  if (!user || !user.userID || !name) {
+    throw new AppError("BAD_REQUEST");
+  }
+  updatedFarm = await farmService.editFarm(user.userID, code, name)
+
+  res.status(201).json(formatSuccessResponse(updatedFarm));
+};
+
+exports.deleteFarm = async (req, res) => {
+  const deletedFarm = await farmService.deleteFarm(user.userID, farmCode);
+
+  res.status(201).json(formatSuccessResponse(deletedFarm));
+};
+
 exports.enrollWorker = async (req, res) => {
   const { farmCode } = req.body;
   const user = req.user || {};
@@ -24,7 +42,7 @@ exports.enrollWorker = async (req, res) => {
   if (!user || !user.userID || !farmCode) {
     throw new AppError("BAD_REQUEST");
   }
-
+  
   const farm = await farmService.getFarmByCode(farmCode);
   if (!farm) {
     throw new AppError("NOT_FOUND");

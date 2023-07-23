@@ -50,3 +50,21 @@ exports.loginUser = async (username, password) => {
   user.password = "";
   return user;
 };
+
+exports.changePassword = async (username, currentPassword, newPassword) => {
+  const user = await User.findOne({ username });
+  if (!user) {
+    throw new AppError("BAD_REQUEST", "User Does Not Exist");
+  }
+
+  const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+
+  if (!isPasswordValid) {
+    throw new AppError("BAD_REQUEST", "Incorrect current password");
+  }
+
+  // Hash the new password and update it in the database
+  const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+  user.password = hashedNewPassword;
+  await user.save();
+};

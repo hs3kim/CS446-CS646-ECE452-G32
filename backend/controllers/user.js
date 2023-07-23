@@ -19,3 +19,15 @@ exports.getUserDetails = async (req, res) => {
 
   res.status(200).json(formatSuccessResponse(user));
 };
+
+exports.editUser = async (req, res) => {
+  const user = req.user || {};
+
+  if (!user || !user.userID || !req.body) {
+    throw new AppError("BAD_REQUEST");
+  }
+  updatedUser = await userService.updateUserProfile(user.userID, req.body)
+  updatedUser.password = ''
+
+  res.status(201).json(formatSuccessResponse(updatedUser));
+};

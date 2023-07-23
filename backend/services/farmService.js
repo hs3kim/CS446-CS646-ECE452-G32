@@ -1,4 +1,5 @@
 const { Farm } = require("../models/farm");
+const { User } = require("../models/user");
 
 exports.getFarmByCode = async (code) => {
   return await Farm.findOne({ code });
@@ -34,6 +35,8 @@ exports.deleteFarm = async (userID, farmCode) => {
   if (!deletedFarm) {
     throw new AppError("Farm was not deleted");
   }
+  await User.updateMany({ worksAt: deletedFarm._id }, { $pull: { worksAt: deletedFarm._id } });
+  await User.updateOne({ owns: deletedFarm._id }, { $pull: { owns: deletedFarm._id } });
   return deletedFarm;
 };
 

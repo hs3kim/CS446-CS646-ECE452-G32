@@ -15,3 +15,15 @@ exports.addWorkedFarm = async (farmID, userID) => {
 exports.getUserByID = async (userID) => {
   return await User.findById(userID);
 };
+
+exports.updateUserProfile = async (userId, newProfile) => {
+  if (newProfile.hasOwnProperty('email')) {
+      newProfile.email = newProfile.email.toLowerCase()
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(userId, newProfile, {new: true});
+  if (!updatedUser) {
+      throw new AppError("BAD_REQUEST", "User Does Not Exist");
+  }
+  return updatedUser
+};

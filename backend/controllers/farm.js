@@ -18,18 +18,24 @@ exports.createFarm = async (req, res) => {
 };
 
 exports.editFarm = async (req, res) => {
-  const { name, code } = req.body;
+  const { name, farmCode } = req.body;
   const user = req.user || {};
 
   if (!user || !user.userID || !name) {
     throw new AppError("BAD_REQUEST");
   }
-  updatedFarm = await farmService.editFarm(user.userID, code, name)
+  updatedFarm = await farmService.editFarm(user.userID, farmCode, name)
 
   res.status(201).json(formatSuccessResponse(updatedFarm));
 };
 
 exports.deleteFarm = async (req, res) => {
+  const { farmCode } = req.body;
+  const user = req.user || {};
+
+  if (!user || !user.userID || !name) {
+    throw new AppError("BAD_REQUEST");
+  }
   const deletedFarm = await farmService.deleteFarm(user.userID, farmCode);
 
   res.status(201).json(formatSuccessResponse(deletedFarm));

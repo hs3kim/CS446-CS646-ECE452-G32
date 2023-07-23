@@ -11,6 +11,7 @@ const { verifyToken } = require("./middlewares/auth");
 const authRoutes = require("./routes/authRoutes");
 const inventoryRoutes = require("./routes/inventoryRoutes");
 const farmRoutes = require("./routes/farmRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 const port = process.env.PORT || 8080;
 
@@ -27,6 +28,7 @@ app.get("/", (_, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/inventory", inventoryRoutes);
 app.use("/api/farm", verifyToken, farmRoutes);
+app.use("/api/user", verifyToken, userRoutes);
 
 app.use(globalErrorHandler);
 

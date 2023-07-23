@@ -5,3 +5,7 @@ exports.addOwnedFarm = async (farmID, userID) => {
     $push: { owns: farmID },
   });
 };
+
+exports.getUserByID = async (userID) => {
+  return await User.findById(userID);
+};

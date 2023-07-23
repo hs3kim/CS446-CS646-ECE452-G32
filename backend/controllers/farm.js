@@ -30,6 +30,14 @@ exports.enrollWorker = async (req, res) => {
     throw new AppError("NOT_FOUND");
   }
 
+  if (farm.owner == user.userID) {
+    throw new AppError("BAD_REQUEST", "You are the owner of this farm");
+  }
+
+  if (farm.employees.includes(user.userID)) {
+    throw new AppError("BAD_REQUEST", "You are already enrolled in this farm");
+  }
+
   await userService.addWorkedFarm(farm._id, user.userID);
   await farmService.addWorker(farm._id, user.userID);
 

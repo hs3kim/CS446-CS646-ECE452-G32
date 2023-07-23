@@ -1,6 +1,8 @@
 package com.example.farmwise;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -34,6 +36,13 @@ public class Login extends AppCompatActivity{
 
         username = String.valueOf(textUsername.getText());
         password = String.valueOf(textPassword.getText());
+
+        // Use code to set JWT token value to file
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        // set value here as JWT token retrieved
+        editor.putString("JWTKey", "value");
+        editor.commit();
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override

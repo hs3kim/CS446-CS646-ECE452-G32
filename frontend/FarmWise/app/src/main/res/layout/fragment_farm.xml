@@ -17,7 +17,18 @@
         android:id="@+id/farmbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|center_horizontal"
-        android:text="Start crop collection voice recognition" />
+        android:layout_gravity="center|center_horizontal|center_vertical"
+        android:text="Start crop collection voice recognition"
+        android:layout_marginBottom="150dp"
+        android:textSize="16sp"
+        android:visibility="visible" />
+
+    <Button
+        android:id="@+id/uploadbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="150dp"
+        android:text="Upload and parse data if connected to internet" />
 
 </FrameLayout>

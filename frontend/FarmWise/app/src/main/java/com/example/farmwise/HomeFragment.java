@@ -18,12 +18,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.Cache;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.farmwise.databinding.FragmentHomeBinding;
@@ -33,6 +31,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -76,7 +76,9 @@ public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
 
-    AlertDialog dialog;
+    AlertDialog joinDialog;
+    AlertDialog createDialog;
+    AlertDialog choiceDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -147,7 +149,8 @@ public class HomeFragment extends Fragment {
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap header = new HashMap();
                 header.put("Content-Type", "application/json");
-                header.put("Cookie", "");
+                header.put("Cookie", sharedPreferences.getString("JWTKey", ""));
+
                 return header;
             }
         };
@@ -155,15 +158,17 @@ public class HomeFragment extends Fragment {
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
         requestQueue.add(jsonObjectRequest);
 
-
-        buildDialog();
+        buildChoiceDialog();
+        buildCreateDialog();
+        buildJoinDialog();
 
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                Snackbar.make(view, "Clicked on FAB", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
-                dialog.show();
+//                joinDialog.show();
+                choiceDialog.show();
             }
         });
 
@@ -176,9 +181,10 @@ public class HomeFragment extends Fragment {
         binding = null;
     }
 
-    private void buildDialog(){
+    private void buildJoinDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View view = getLayoutInflater().inflate(R.layout.home_add_dialog, null);
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
         EditText farmName = view.findViewById(R.id.farmNameEdit);
         EditText farmCode = view.findViewById(R.id.farmCodeEdit);
@@ -189,6 +195,10 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         addFarm(farmName.getText().toString(), farmCode.getText().toString());
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString(farmCode.getText().toString(),farmName.getText().toString());
+                        editor.commit();
+
                         farmName.setText("");
                         farmCode.setText("");
                     }
@@ -200,7 +210,119 @@ public class HomeFragment extends Fragment {
                         farmCode.setText("");
                     }
                 });
-        dialog = builder.create();
+        joinDialog = builder.create();
+    }
+
+    private void buildCreateDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        View view = getLayoutInflater().inflate(R.layout.home_create_dialog, null);
+
+
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+
+
+        builder.setView(view);
+        builder.setTitle("Create a farm")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String reqURL = "https://farmwise.onrender.com/api/farm/new";
+                        JSONObject jsonReqBody = new JSONObject();
+                        EditText farmName = view.findViewById(R.id.farmNameEdit);
+                        try{
+                            jsonReqBody.put("name", farmName.getText().toString());
+                        }
+                        catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        final String mRequestBody = jsonReqBody.toString();
+
+
+                        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                                (Request.Method.POST, reqURL, null, new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        String status;
+                                        try {
+                                             status = response.getString("status");
+                                            if (status.equals("SUCCESS")) {
+                                                JSONObject data = response.getJSONObject("data");
+                                                String retFarmCode = data.getString("code");
+                                                String retFarmName = data.getString("name");
+
+                                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                                editor.putString(retFarmCode, retFarmName);
+                                                editor.commit();
+
+                                                addFarm(retFarmName, retFarmCode);
+                                            }
+                                        }
+                                        catch (JSONException e) {
+                                            status = "error parsing JSON";
+                                        }
+                                    }
+                                }, new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        // display error msg
+                                    }
+                                }) {
+                            @Override
+                            public Map<String, String> getHeaders() throws AuthFailureError {
+                                HashMap header = new HashMap();
+                                header.put("Content-Type", "application/json");
+
+                                header.put("Cookie", sharedPreferences.getString("JWTKey", ""));
+                                return header;
+                            }
+                            @Override
+                            public byte[] getBody() {
+                                try {
+                                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                                }
+                                catch (UnsupportedEncodingException uee) {
+                                    return null;
+                                }
+                            }
+                            @Override
+                            public String getBodyContentType() {
+                                return "application/json; charset=utf-8";
+                            }
+                        };
+                        RequestQueue requestQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
+                        requestQueue.add(jsonObjectRequest);
+                        farmName.setText("");
+
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        EditText farmName = view.findViewById(R.id.farmNameEdit);
+                        farmName.setText("");
+                    }
+                });
+
+        createDialog = builder.create();
+    }
+
+    private void buildChoiceDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        View view = getLayoutInflater().inflate(R.layout.home_choice_dialog, null);
+        String[] choices = {"Create a farm", "Join a farm"};
+        builder.setTitle("Join / Create a Farm")
+                .setItems(choices, new DialogInterface.OnClickListener(){
+                   public void onClick(DialogInterface dialog, int which) {
+                        if (which == 0){
+                            // create farm selected
+                            createDialog.show();
+                        } else if (which == 1){
+                            joinDialog.show();
+                        }
+                   }
+                });
+
+        choiceDialog = builder.create();
     }
 
     private void addFarm(String farmName, String farmCode) {

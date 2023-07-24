@@ -23,8 +23,13 @@
     <string name="farmFragment">farm fragment</string>
     <string name="marketFragment">market fragment</string>
     <string name="charityFragment">charity fragment</string>
+    <string name="collect_caption">To start collect say \"FarmWise\".</string>
+    <string name="digits_caption">Say the number of crops and the crop name to record</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
+
 </resources>
+
+

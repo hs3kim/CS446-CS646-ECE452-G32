@@ -194,10 +194,68 @@ public class HomeFragment extends Fragment {
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        addFarm(farmName.getText().toString(), farmCode.getText().toString());
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString(farmCode.getText().toString(),farmName.getText().toString());
-                        editor.commit();
+                        String strFarmCode = farmCode.getText().toString();
+                        String strFarmName = farmName.getText().toString();
+
+                        String reqURL = "https://farmwise.onrender.com/api/farm/enroll";
+                        JSONObject jsonReqBody = new JSONObject();
+                        try {
+                            jsonReqBody.put("farmCode", strFarmCode);
+                        }
+                        catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        final String mRequestBody = jsonReqBody.toString();
+
+                        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                                (Request.Method.POST, reqURL, null, new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        String status;
+                                        try {
+                                            status = response.getString("status");
+                                            if (status.equals("SUCCESS")) {
+                                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                                editor.putString(strFarmCode, strFarmName);
+                                                editor.commit();
+
+                                                addFarm(strFarmName, strFarmCode);
+                                            }
+                                        }
+                                        catch (JSONException e) {
+                                            status = "error parsing JSON";
+                                        }
+                                    }
+                                }, new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error){
+                                        // display error message
+                                    }
+                                }) {
+                            @Override
+                            public Map<String, String> getHeaders() throws AuthFailureError {
+                                HashMap header = new HashMap();
+                                header.put("Content-Type", "application/json");
+                                header.put("Cookie", sharedPreferences.getString("JWTKey", ""));
+
+                                return header;
+                            }
+                            @Override
+                            public byte[] getBody() {
+                                try {
+                                    return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                                }
+                                catch (UnsupportedEncodingException uee) {
+                                    return null;
+                                }
+                            }
+                            @Override
+                            public String getBodyContentType() {
+                                return "application/json; charset=utf-8";
+                            }
+                        };
+                        RequestQueue requestQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
+                        requestQueue.add(jsonObjectRequest);
 
                         farmName.setText("");
                         farmCode.setText("");
@@ -271,8 +329,8 @@ public class HomeFragment extends Fragment {
                             public Map<String, String> getHeaders() throws AuthFailureError {
                                 HashMap header = new HashMap();
                                 header.put("Content-Type", "application/json");
-
                                 header.put("Cookie", sharedPreferences.getString("JWTKey", ""));
+
                                 return header;
                             }
                             @Override

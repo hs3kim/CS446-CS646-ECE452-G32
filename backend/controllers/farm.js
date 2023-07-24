@@ -24,7 +24,7 @@ exports.editFarm = async (req, res) => {
   if (!user || !user.userID || !name) {
     throw new AppError("BAD_REQUEST");
   }
-  updatedFarm = await farmService.editFarm(user.userID, farmCode, name)
+  updatedFarm = await farmService.editFarm(user.userID, farmCode, name);
 
   res.status(201).json(formatSuccessResponse(updatedFarm));
 };
@@ -48,7 +48,7 @@ exports.enrollWorker = async (req, res) => {
   if (!user || !user.userID || !farmCode) {
     throw new AppError("BAD_REQUEST");
   }
-  
+
   const farm = await farmService.getFarmByCode(farmCode);
   if (!farm) {
     throw new AppError("NOT_FOUND");
@@ -64,6 +64,33 @@ exports.enrollWorker = async (req, res) => {
 
   await userService.addWorkedFarm(farm._id, user.userID);
   await farmService.addWorker(farm._id, user.userID);
+
+  res.status(200).json(formatSuccessResponse());
+};
+
+exports.unenrollWorker = async (req, res) => {
+  const { farmCode } = req.body;
+  const user = req.user || {};
+
+  if (!user || !user.userID || !farmCode) {
+    throw new AppError("BAD_REQUEST");
+  }
+
+  const farm = await farmService.getFarmByCode(farmCode);
+  if (!farm) {
+    throw new AppError("NOT_FOUND");
+  }
+
+  if (farm.owner == user.userID) {
+    throw new AppError("BAD_REQUEST", "You are the owner of this farm");
+  }
+
+  if (!farm.employees.includes(user.userID)) {
+    throw new AppError("BAD_REQUEST", "You are not enrolled in this farm");
+  }
+
+  await userService.removeWorkedFarm(farm._id, user.userID);
+  await farmService.removeWorker(farm._id, user.userID);
 
   res.status(200).json(formatSuccessResponse());
 };

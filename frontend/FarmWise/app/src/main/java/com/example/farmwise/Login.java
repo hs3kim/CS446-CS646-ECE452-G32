@@ -1,6 +1,8 @@
 package com.example.farmwise;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,13 +15,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Cache;
 import com.android.volley.Network;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.BasicNetwork;
-import com.android.volley.toolbox.DiskBasedCache;
-import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.textfield.TextInputEditText;
@@ -71,17 +71,6 @@ public class Login extends AppCompatActivity {
 
                 String registerUrl = "https://farmwise.onrender.com/api/auth/login";
 
-                // Instantiate the cache
-//                Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024); // 1MB cap
-//
-//                // Set up the network to use HttpURLConnection as the HTTP client.
-//                Network network = new BasicNetwork(new HurlStack());
-//
-//                // Instantiate the RequestQueue with the cache and network
-//                request = new RequestQueue(cache, network);
-//
-//                // Start the queue
-//                request.start();
                 JSONObject jsonData = new JSONObject();
                 try {
                     jsonData.put("username", username);
@@ -92,6 +81,7 @@ public class Login extends AppCompatActivity {
 
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, registerUrl, jsonData,
                         new Response.Listener<JSONObject>() {
+
                             @Override
                             public void onResponse(JSONObject response) {
                                 try {
@@ -125,6 +115,21 @@ public class Login extends AppCompatActivity {
                         Map<String, String> headers = new HashMap<>();
                         headers.put("Authorization", "");
                         return headers;
+                    }
+
+                    @Override
+                    protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                        assert response.headers != null;
+                        String JWT = response.headers.get("Set-Cookie");
+//                        Log.d("JWT", " :" + JWT);
+                        // Use code to set JWT token value to file
+                        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        // set value here as JWT token retrieved
+                        editor.putString("JWTKey", JWT);
+                        editor.apply();
+
+                        return super.parseNetworkResponse(response);
                     }
                 };
 

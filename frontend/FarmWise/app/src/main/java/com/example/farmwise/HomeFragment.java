@@ -216,13 +216,20 @@ public class HomeFragment extends Fragment {
                                         String status;
                                         try {
                                             status = response.getString("status");
+                                            View homeView = binding.getRoot();
+                                            String snackbarMsg = "";
                                             if (status.equals("SUCCESS")) {
                                                 SharedPreferences.Editor editor = sharedPreferences.edit();
                                                 editor.putString(strFarmCode, strFarmName);
                                                 editor.commit();
 
                                                 addFarm(strFarmName, strFarmCode, false);
+                                                snackbarMsg = "Join successful";
+                                            } else {
+                                                snackbarMsg = response.getString("statusMsg");
                                             }
+                                            Snackbar.make(homeView, snackbarMsg, Snackbar.LENGTH_LONG)
+                                                    .setAction("Action", null).show();
                                         }
                                         catch (JSONException e) {
                                             status = "error parsing JSON";
@@ -305,6 +312,8 @@ public class HomeFragment extends Fragment {
                                         String status;
                                         try {
                                              status = response.getString("status");
+                                             View homeView = binding.getRoot();
+                                             String snackbarMsg = "";
                                             if (status.equals("SUCCESS")) {
                                                 JSONObject data = response.getJSONObject("data");
                                                 String retFarmCode = data.getString("code");
@@ -315,7 +324,12 @@ public class HomeFragment extends Fragment {
                                                 editor.commit();
 
                                                 addFarm(retFarmName, retFarmCode, true);
+                                                snackbarMsg = "Create successful";
+                                            } else {
+                                                snackbarMsg = response.getString("statusMsg");
                                             }
+                                            Snackbar.make(homeView, snackbarMsg, Snackbar.LENGTH_LONG)
+                                                    .setAction("Action", null).show();
                                         }
                                         catch (JSONException e) {
                                             status = "error parsing JSON";
@@ -433,15 +447,16 @@ public class HomeFragment extends Fragment {
                                                     try {
                                                         status = response.getString("status");
                                                         View homeView = binding.getRoot();
+                                                        String snackbarMsg = "";
                                                         if (status.equals("SUCCESS")) {
-                                                            // create toast for successs
-                                                            Snackbar.make(homeView, "Successfully left " + farmName, Snackbar.LENGTH_LONG)
-                                                                    .setAction("Action", null).show();
+                                                            // create toast for success
+                                                            snackbarMsg = "Successfully left " + farmName;
                                                             binding.container.removeView(view);
                                                         } else {
-                                                            Snackbar.make(homeView, response.getString("statusMsg"), Snackbar.LENGTH_LONG)
-                                                                    .setAction("Action", null).show();
+                                                            snackbarMsg = response.getString("statusMsg");
                                                         }
+                                                        Snackbar.make(homeView, snackbarMsg, Snackbar.LENGTH_LONG)
+                                                                .setAction("Action", null).show();
                                                     } catch (JSONException e) {
                                                         status = "error parsing JSON";
                                                     }
@@ -513,15 +528,16 @@ public class HomeFragment extends Fragment {
                                                     try {
                                                         status = response.getString("status");
                                                         View homeView = binding.getRoot();
+                                                        String snackbarMsg = "";
                                                         if (status.equals("SUCCESS")) {
                                                             // create toast for successs
-                                                            Snackbar.make(homeView, "Successfully deleted " + farmName, Snackbar.LENGTH_LONG)
-                                                                    .setAction("Action", null).show();
+                                                            snackbarMsg = "Successfully deleted " + farmName;
                                                             binding.container.removeView(view);
                                                         } else {
-                                                            Snackbar.make(homeView, response.getString("statusMsg"), Snackbar.LENGTH_LONG)
-                                                                    .setAction("Action", null).show();
+                                                            snackbarMsg = response.getString("statusMsg");
                                                         }
+                                                        Snackbar.make(homeView, snackbarMsg, Snackbar.LENGTH_LONG)
+                                                                .setAction("Action", null).show();
                                                     } catch (JSONException e) {
                                                         status = "error parsing JSON";
                                                     }

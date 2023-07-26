@@ -96,6 +96,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -192,47 +193,66 @@ public class FarmFragment extends Fragment {
         String reqURL = "https://farmwise.onrender.com/api/inventory/update";
         try {
             JSONObject requestBody = new JSONObject();
-            requestBody.put("farmCode", 1234);
+            requestBody.put("farmCode", 10005);
             JSONArray textsArray = new JSONArray(recognizedWordsList);
             requestBody.put("texts", textsArray);
-            System.out.println(textsArray);
+            final String mRequestBody = requestBody.toString();
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                    (Request.Method.POST, reqURL, requestBody, new Response.Listener<JSONObject>() {
+                    (Request.Method.POST, reqURL, null, new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
+                            System.out.println(response);
                             String status;
                             JSONObject data;
                             try{
                                 status = response.getString("status");
-                                System.out.println(status);
                                 if (status.equals("SUCCESS")) {
                                     clearRecognizedCropsFile();
                                 }
                             }
                             catch (JSONException e) {
                                 status = "error parsing JSON";
+                                System.out.println(status);
+                            } catch (Exception e) {
+                                System.out.println("error");
                             }
                         }
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-//                        farmListText.setText("error");
+                            System.out.println("response error");
                         }
                     }) {
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     HashMap header = new HashMap();
                     header.put("Content-Type", "application/json");
-                    header.put("Cookie", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI2NDkzYmE3ZTE0OTZmYmFjM2U0OTRiMDUiLCJ1c2VybmFtZSI6InRlc3QxIiwiZW1haWwiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTY5MDA3NzM0OH0.BxrHXTrlO2wlgtKjepSErje5a-h9--9dFbTUXNeTPQg");
+                    header.put("Cookie", "");
                     return header;
                 }
+                @Override
+                public byte[] getBody() {
+                    try {
+                        return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                    }
+                    catch (UnsupportedEncodingException uee) {
+                        return null;
+                    }
+                }
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
             };
-
+            System.out.println("Adding request");
             RequestQueue requestQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
             requestQueue.add(jsonObjectRequest);
         } catch (JSONException e) {
             throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+
 
 
     }

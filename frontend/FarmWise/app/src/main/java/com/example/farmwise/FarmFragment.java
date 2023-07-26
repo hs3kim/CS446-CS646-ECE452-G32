@@ -2,6 +2,7 @@ package com.example.farmwise;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 
 import android.net.ConnectivityManager;
@@ -129,7 +130,7 @@ public class FarmFragment extends Fragment {
                 if (isConnectedToInternet()) {
                     List<String> recognizedWordsList = updateRecognizedWordsToBackend();
                     sendToBackend(recognizedWordsList);
-                    clearRecognizedCropsFile();
+//                    clearRecognizedCropsFile();
                 } else {
                     showStatusMessage("Please connect to internet first");
                 }
@@ -160,9 +161,11 @@ public class FarmFragment extends Fragment {
     private void sendToBackend(List<String> recognizedWordsList) {
         // Get list of farms
         String reqURL = "https://farmwise.onrender.com/api/inventory/update";
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        String activeFarmCode = sharedPreferences.getString("activeFarmCode", "");
         try {
             JSONObject requestBody = new JSONObject();
-            requestBody.put("farmCode", 10005);
+            requestBody.put("farmCode", activeFarmCode);
             JSONArray textsArray = new JSONArray(recognizedWordsList);
             requestBody.put("texts", textsArray);
             final String mRequestBody = requestBody.toString();

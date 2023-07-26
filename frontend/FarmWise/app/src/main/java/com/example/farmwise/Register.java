@@ -133,6 +133,20 @@ public class Register extends AppCompatActivity {
                         headers.put("Authorization", "");
                         return headers;
                     }
+                     @Override
+                    protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                        assert response.headers != null;
+                        String JWT = response.headers.get("jwtauthtoken");
+//                        Log.d("JWT", " :" + JWT);
+                        // Use code to set JWT token value to file
+                        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        // set value here as JWT token retrieved
+                        editor.putString("JWTKey", JWT);
+                        editor.apply();
+
+                        return super.parseNetworkResponse(response);
+                    }
                 };
 
                 request = Volley.newRequestQueue(getApplicationContext());

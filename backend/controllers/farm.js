@@ -33,7 +33,7 @@ exports.deleteFarm = async (req, res) => {
   const { farmCode } = req.body;
   const user = req.user || {};
 
-  if (!user || !user.userID || !name) {
+  if (!user || !user.userID || !farmCode) {
     throw new AppError("BAD_REQUEST");
   }
   const deletedFarm = await farmService.deleteFarm(user.userID, farmCode);

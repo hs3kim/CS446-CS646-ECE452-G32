@@ -28,6 +28,8 @@
     <string name="charityFragment">charity fragment</string>
     <string name="collect_caption">To start collect say \"FarmWise\".</string>
     <string name="digits_caption">Say the number of crops and the crop name to record</string>
+    <string name="sold_key_caption">To start recording collecting or selling say \"FarmWise\".</string>
+    <string name="sold_caption">Say the number of crops and the crop name that is collected or sold to record</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="save">Save</string>

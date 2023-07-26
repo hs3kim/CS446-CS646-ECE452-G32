@@ -27,7 +27,7 @@
             app:layout_constraintEnd_toEndOf="@+id/scrollView3" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/farmList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -36,6 +36,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            />
+        <ImageView
+            android:id="@+id/profile_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/usercircle"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             />
 
         <ScrollView
@@ -46,7 +54,7 @@
             android:overScrollMode="never"
             android:scrollbars="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView">
+            app:layout_constraintTop_toBottomOf="@+id/farmList">
 
 
             <LinearLayout

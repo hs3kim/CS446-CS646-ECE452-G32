@@ -17,7 +17,7 @@ exports.registerUser = async (req, res) => {
 
   res
     .status(201)
-    .setHeader("Set-Cookie", `FarmWiseKey=${jwtToken}`)
+    .setHeader("JWTAuthToken", `FarmWiseKey=${jwtToken}`)
     .json(formatSuccessResponse(createdUser));
 };
 
@@ -34,6 +34,18 @@ exports.loginUser = async (req, res) => {
 
   res
     .status(200)
-    .setHeader("Set-Cookie", `FarmWiseKey=${jwtToken}`)
+    .setHeader("JWTAuthToken", `FarmWiseKey=${jwtToken}`)
     .json(formatSuccessResponse(user));
+};
+
+exports.changePassword = async (req, res) => {
+  const { username, currentPassword, newPassword } = req.body;
+
+  if (!username || !currentPassword || !newPassword) {
+    throw new AppError("BAD_REQUEST");
+  }
+
+  await authService.changePassword(username, currentPassword, newPassword);
+
+  res.json(formatSuccessResponse(null));
 };

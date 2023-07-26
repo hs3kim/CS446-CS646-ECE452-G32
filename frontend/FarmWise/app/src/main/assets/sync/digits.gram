@@ -1,0 +1,13 @@
+#JSGF V1.0;
+
+grammar digits;
+
+<crop_name> = (apple | banana | carrot | potato | tomato | cucumber | lettuce | broccoli | corn | wheat | rice | oats | barley | sunflower | cotton | soybean | coffee | tea | cocoa | pineapple | orange | lemon | lime | mango | papaya | watermelon | cantaloupe | honeydew | blueberry | raspberry | strawberry | blackberry | cranberry | peach | pear | plum | apricot | cherry | fig | grape | kiwi | pomegranate | avocado | eggplant | zucchini | pumpkin | squash | radish | turnip | beet | spinach);
+<number> = (one | two | three | four | five | six | seven | eight | nine | ten | eleven | twelve | thirteen | fourteen | fifteen | sixteen | seventeen | eighteen | nineteen);
+<tens> = (twenty | thirty | forty | fifty | sixty | seventy | eighty | ninety);
+<greater_number> =  (hundred | thousand | million | billion | trillion);
+<filler>  = (and);
+public <digits> = (<number> <crop_name>
+                 | <tens> <crop_name>
+                 | <tens> <number> <crop_name>
+                 | ([<tens>] [<number>] <greater_number> [<filler>])*  [<tens>] [<number>] <crop_name>);

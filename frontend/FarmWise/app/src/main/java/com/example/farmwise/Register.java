@@ -1,6 +1,8 @@
 package com.example.farmwise;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -15,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Cache;
 import com.android.volley.Network;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -133,7 +136,8 @@ public class Register extends AppCompatActivity {
                         headers.put("Authorization", "");
                         return headers;
                     }
-                     @Override
+
+                    @Override
                     protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
                         assert response.headers != null;
                         String JWT = response.headers.get("jwtauthtoken");

@@ -26,9 +26,9 @@ public class MainActivity extends AppCompatActivity {
             if (id == R.id.home){
                 replaceFragment(new HomeFragment());
             } else if (id == R.id.farm){
-                replaceFragment(new FarmFragment());
+                replaceFragment(new PreFarmFragment());
             } else if (id == R.id.market){
-                replaceFragment(new MarketFragment());
+                replaceFragment(new PreMarketFragment());
             } else if (id == R.id.charity){
                 replaceFragment(new CharityFragment());
             }

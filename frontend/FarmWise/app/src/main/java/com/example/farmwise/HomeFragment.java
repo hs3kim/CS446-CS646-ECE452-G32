@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
@@ -79,7 +80,8 @@ public class HomeFragment extends Fragment {
     AlertDialog joinDialog;
     AlertDialog createDialog;
     AlertDialog choiceDialog;
-
+    AlertDialog leaveConfirmationDialog;
+    AlertDialog deleteConfirmationDialog;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,7 +100,7 @@ public class HomeFragment extends Fragment {
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 //        SharedPreferences.Editor editor = sharedPreferences.edit();
-//        editor.putString("10005", "FarmNameInSharedPref");
+//        editor.putString("10005", "randomjoinname2");
 //        editor.commit();
 
         // Get list of farms
@@ -122,7 +124,7 @@ public class HomeFragment extends Fragment {
                                     JSONObject farm = ownedFarms.getJSONObject(i);
                                     String farmCode = farm.getString("code");
                                     String farmName = sharedPreferences.getString(farmCode, farm.getString("name"));
-                                    addFarm(farmName, farmCode);
+                                    addFarm(farmName, farmCode, true);
                                 }
 
                                 // create farm cards for farms working at
@@ -131,7 +133,7 @@ public class HomeFragment extends Fragment {
                                     JSONObject farm = worksAtFarms.getJSONObject(i);
                                     String farmCode = farm.getString("code");
                                     String farmName = sharedPreferences.getString(farmCode, farm.getString("name"));
-                                    addFarm(farmName, farmCode);
+                                    addFarm(farmName, farmCode, false);
                                 }
                             }
                         }
@@ -219,7 +221,7 @@ public class HomeFragment extends Fragment {
                                                 editor.putString(strFarmCode, strFarmName);
                                                 editor.commit();
 
-                                                addFarm(strFarmName, strFarmCode);
+                                                addFarm(strFarmName, strFarmCode, false);
                                             }
                                         }
                                         catch (JSONException e) {
@@ -312,7 +314,7 @@ public class HomeFragment extends Fragment {
                                                 editor.putString(retFarmCode, retFarmName);
                                                 editor.commit();
 
-                                                addFarm(retFarmName, retFarmCode);
+                                                addFarm(retFarmName, retFarmCode, true);
                                             }
                                         }
                                         catch (JSONException e) {
@@ -366,7 +368,6 @@ public class HomeFragment extends Fragment {
 
     private void buildChoiceDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        View view = getLayoutInflater().inflate(R.layout.home_choice_dialog, null);
         String[] choices = {"Create a farm", "Join a farm"};
         builder.setTitle("Join / Create a Farm")
                 .setItems(choices, new DialogInterface.OnClickListener(){
@@ -383,11 +384,15 @@ public class HomeFragment extends Fragment {
         choiceDialog = builder.create();
     }
 
-    private void addFarm(String farmName, String farmCode) {
+
+    private void addFarm(String farmName, String farmCode, boolean owned) {
         View view = getLayoutInflater().inflate(R.layout.home_farm_card, null);
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+
 
         // Clickable buttons
         ImageButton delete = view.findViewById(R.id.delete_farm);
+        ImageButton leave = view.findViewById(R.id.leave_farm);
         CardView card = view.findViewById(R.id.farmCard);
 
         // Set farm name
@@ -398,12 +403,101 @@ public class HomeFragment extends Fragment {
         TextView farmCodeView = view.findViewById(R.id.farm_code);
         farmCodeView.setText("#" + farmCode);
 
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                binding.container.removeView(view);
-            }
-        });
+        // Set view based on ownership
+        ImageView adminImage = view.findViewById(R.id.admin);
+        if (!owned){
+            adminImage.setVisibility(View.GONE);
+            delete.setVisibility(View.GONE);
+
+            leave.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setMessage("Are you sure you want to leave " + farmName + "?")
+                            .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    String reqURL = "https://farmwise.onrender.com/api/farm/unenroll";
+                                    JSONObject jsonReqBody = new JSONObject();
+                                    try {
+                                        jsonReqBody.put("farmCode", farmCode);
+                                    }
+                                    catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    final String mRequestBody = jsonReqBody.toString();
+                                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                                            (Request.Method.POST, reqURL, null, new Response.Listener<JSONObject>() {
+                                                @Override
+                                                public void onResponse(JSONObject response) {
+                                                    String status;
+                                                    try {
+                                                        status = response.getString("status");
+                                                        View homeView = binding.getRoot();
+                                                        if (status.equals("SUCCESS")) {
+                                                            // create toast for successs
+                                                            Snackbar.make(homeView, "Successfully left the farm", Snackbar.LENGTH_LONG)
+                                                                    .setAction("Action", null).show();
+                                                            binding.container.removeView(view);
+                                                        } else {
+                                                            Snackbar.make(homeView, response.getString("statusMsg"), Snackbar.LENGTH_LONG)
+                                                                    .setAction("Action", null).show();
+                                                        }
+                                                    } catch (JSONException e) {
+                                                        status = "error parsing JSON";
+                                                    }
+                                                }
+                                            }, new Response.ErrorListener() {
+                                                @Override
+                                                public void onErrorResponse(VolleyError error) {
+                                                    // display error msg
+                                                }
+                                            }) {
+                                        @Override
+                                        public Map<String, String> getHeaders() throws AuthFailureError {
+                                            HashMap header = new HashMap();
+                                            header.put("Content-Type", "application/json");
+                                            header.put("Cookie", sharedPreferences.getString("JWTKey", ""));
+
+                                            return header;
+                                        }
+                                        @Override
+                                        public byte[] getBody() {
+                                            try {
+                                                return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                                            }
+                                            catch (UnsupportedEncodingException uee) {
+                                                return null;
+                                            }
+                                        }
+                                        @Override
+                                        public String getBodyContentType() {
+                                            return "application/json; charset=utf-8";
+                                        }
+                                    };
+                                    RequestQueue requestQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
+                                    requestQueue.add(jsonObjectRequest);
+                                }
+                            })
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // User cancelled dialog
+                                }
+                            });
+                    leaveConfirmationDialog = builder.create();
+                    leaveConfirmationDialog.show();
+                }
+            });
+        } else {
+            delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    binding.container.removeView(view);
+                }
+            });
+        }
+
+
 
         card.setOnClickListener(new View.OnClickListener() {
             @Override

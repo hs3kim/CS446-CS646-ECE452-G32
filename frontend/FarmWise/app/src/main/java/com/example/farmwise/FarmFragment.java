@@ -11,10 +11,12 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Cache;
@@ -59,6 +61,8 @@ public class FarmFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private TextView statusTextView;
+
     public FarmFragment() {
         // Required empty public constructor
     }
@@ -96,6 +100,8 @@ public class FarmFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_farm, container, false);
 
+        // Find the TextView by its ID
+        statusTextView = view.findViewById(R.id.statusTextView);
         // Find the button by its ID
         Button crop_recognition_button = view.findViewById(R.id.farmbutton);
 
@@ -118,12 +124,32 @@ public class FarmFragment extends Fragment {
                     List<String> recognizedWordsList = updateRecognizedWordsToBackend();
                     sendToBackend(recognizedWordsList);
                     clearRecognizedCropsFile();
+                } else {
+                    showStatusMessage("Please connect to internet first");
                 }
             }
         });
 
         return view;
 //        return inflater.inflate(R.layout.fragment_farm, container, false);
+    }
+    private void showStatusMessage(String message) {
+        if (statusTextView != null) {
+            statusTextView.setText(message);
+            statusTextView.setVisibility(View.VISIBLE);
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    hideStatusMessage();
+                }
+            }, 1500);
+        }
+    }
+    private void hideStatusMessage() {
+        if (statusTextView != null) {
+            statusTextView.setVisibility(View.GONE);
+        }
     }
     private void sendToBackend(List<String> recognizedWordsList) {
         // Get list of farms
@@ -145,6 +171,7 @@ public class FarmFragment extends Fragment {
                                 status = response.getString("status");
                                 if (status.equals("SUCCESS")) {
                                     clearRecognizedCropsFile();
+                                    showStatusMessage("Upload successful");
                                 }
                             }
                             catch (JSONException e) {

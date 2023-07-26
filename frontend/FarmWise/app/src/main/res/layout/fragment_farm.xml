@@ -38,4 +38,5 @@
         android:textSize="18sp"
         android:textColor="@android:color/black"
         android:visibility="gone" />
+
 </FrameLayout>

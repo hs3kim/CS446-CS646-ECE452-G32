@@ -19,6 +19,9 @@
     <string name="farmName4">Eve\'s Farm</string>
     <string name="home_FAB_desc"></string>
     <string name="home_search_hint">Farm search</string>
+    <string name="count">count: </string>
+    <string name="item_value">item value: $</string>
+    <string name="placeholder">placeholder</string>
 
     <string name="farmFragment">farm fragment</string>
     <string name="marketFragment">market fragment</string>
@@ -27,6 +30,7 @@
     <string name="digits_caption">Say the number of crops and the crop name to record</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="save">Save</string>
 
     <string name="preference_file_key">farmwiseKey</string>
 

@@ -116,7 +116,7 @@
                 app:layout_constraintVertical_bias="0.479" />
 
             <ImageView
-                android:id="@+id/imageView6"
+                android:id="@+id/edit_email"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_below="@id/textUser"
@@ -126,7 +126,7 @@
 
 
             <ImageView
-                android:id="@+id/imageView7"
+                android:id="@+id/edit_password"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_below="@id/textUser"

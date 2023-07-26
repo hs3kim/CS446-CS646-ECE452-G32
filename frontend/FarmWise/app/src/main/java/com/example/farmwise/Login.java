@@ -127,7 +127,7 @@ public class Login extends AppCompatActivity {
                     @Override
                     protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
                         assert response.headers != null;
-                        String JWT = response.headers.get("Set-Cookie");
+                        String JWT = response.headers.get("jwtauthtoken");
 //                        Log.d("JWT", " :" + JWT);
                         // Use code to set JWT token value to file
                         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);

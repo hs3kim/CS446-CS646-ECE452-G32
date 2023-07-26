@@ -7,6 +7,7 @@ require("express-async-errors");
 const { connectDB } = require("./config/database");
 const { globalErrorHandler } = require("./middlewares/errorHandling");
 const { verifyToken } = require("./middlewares/auth");
+const { logRequests } = require("./middlewares/log");
 
 const authRoutes = require("./routes/authRoutes");
 const inventoryRoutes = require("./routes/inventoryRoutes");
@@ -20,6 +21,7 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
+app.use(logRequests);
 
 app.get("/", (_, res) => {
   res.send("FarmWise Backend Server");

@@ -1,11 +1,18 @@
 package com.example.farmwise;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.AssetManager;
 import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
-import androidx.fragment.app.Fragment;
+import com.example.farmwise.PocketSphinxActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,6 +65,20 @@ public class FarmFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_farm, container, false);
+        View view = inflater.inflate(R.layout.fragment_farm, container, false);
+
+        // Find the button by its ID
+        Button crop_recognition_button = view.findViewById(R.id.farmbutton);
+
+        crop_recognition_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Start the PocketSphinxActivity when the button is clicked
+                Intent intent = new Intent(requireContext(), PocketSphinxActivity.class);
+                startActivity(intent);
+            }
+        });
+        return view;
+//        return inflater.inflate(R.layout.fragment_farm, container, false);
     }
 }

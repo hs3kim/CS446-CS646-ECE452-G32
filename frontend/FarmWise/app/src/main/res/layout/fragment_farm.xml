@@ -13,4 +13,11 @@
         android:layout_gravity="center"
         />
 
+    <Button
+        android:id="@+id/farmbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:text="Start crop collection voice recognition" />
+
 </FrameLayout>

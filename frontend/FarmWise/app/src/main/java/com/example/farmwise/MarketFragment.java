@@ -3,11 +3,17 @@ package com.example.farmwise;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,6 +34,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,6 +68,8 @@ public class MarketFragment extends Fragment {
     private FragmentMarketBinding binding;
     private int selectedItemCount;
     private float selectedItemValue;
+    private TextView statusTextView;
+    private String fragment_file;
 
     AlertDialog editDialog;
 
@@ -91,8 +104,43 @@ public class MarketFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        SharedPreferences codePreference = getContext().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        String activeFarmCode = codePreference.getString("activeFarmCode", "");
+        fragment_file = "market" + activeFarmCode + ".txt";
+        System.out.println(fragment_file);
         binding = FragmentMarketBinding.inflate(getLayoutInflater(), container, false);
         View view = binding.getRoot();
+        statusTextView = view.findViewById(R.id.statusTextView);
+
+        // Find the button by its ID
+        Button crop_recognition_button = view.findViewById(R.id.farmbutton);
+
+        crop_recognition_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Start the PocketSphinxActivity when the button is clicked
+                Intent intent = new Intent(requireContext(), PocketSphinxActivity.class);
+                intent.putExtra("fragment", fragment_file);
+                intent.putExtra("action", "sold");
+                startActivity(intent);
+            }
+        });
+
+        Button upload_button = view.findViewById(R.id.uploadbutton);
+
+        upload_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // upload
+                if (isConnectedToInternet()) {
+                    List<String> recognizedWordsList = updateRecognizedWordsToBackend();
+                    sendToBackend(recognizedWordsList);
+//                    clearRecognizedCropsFile();
+                } else {
+                    showStatusMessage("Please connect to internet first");
+                }
+            }
+        });
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         String farmCode = sharedPreferences.getString("activeFarmCode", "");
@@ -332,4 +380,144 @@ public class MarketFragment extends Fragment {
                 });
         editDialog = builder.create();
     }
+    private void showStatusMessage(String message) {
+        if (statusTextView != null) {
+            statusTextView.setText(message);
+            statusTextView.setVisibility(View.VISIBLE);
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    hideStatusMessage();
+                }
+            }, 1500);
+        }
+    }
+    private void hideStatusMessage() {
+        if (statusTextView != null) {
+            statusTextView.setVisibility(View.GONE);
+        }
+    }
+    private void sendToBackend(List<String> recognizedWordsList) {
+        // Get list of farms
+        String reqURL = "https://farmwise.onrender.com/api/inventory/update";
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        String activeFarmCode = sharedPreferences.getString("activeFarmCode", "");
+        try {
+            JSONObject requestBody = new JSONObject();
+            requestBody.put("farmCode", activeFarmCode);
+            JSONArray textsArray = new JSONArray(recognizedWordsList);
+            requestBody.put("texts", textsArray);
+            final String mRequestBody = requestBody.toString();
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                    (Request.Method.POST, reqURL, null, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            System.out.println(response);
+                            String status;
+                            JSONObject data;
+                            try{
+                                status = response.getString("status");
+                                if (status.equals("SUCCESS")) {
+                                    clearRecognizedCropsFile();
+                                    showStatusMessage("Upload successful");
+                                }
+                            }
+                            catch (JSONException e) {
+                                status = "error parsing JSON";
+                                System.out.println(status);
+                            } catch (Exception e) {
+                                System.out.println("error");
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            System.out.println("response error");
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap header = new HashMap();
+                    header.put("Content-Type", "application/json");
+                    header.put("Cookie", "");
+                    return header;
+                }
+                @Override
+                public byte[] getBody() {
+                    try {
+                        return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                    }
+                    catch (UnsupportedEncodingException uee) {
+                        return null;
+                    }
+                }
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
+                }
+            };
+            System.out.println("Adding request");
+            RequestQueue requestQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
+            requestQueue.add(jsonObjectRequest);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+
+
+    }
+    private boolean isConnectedToInternet() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null) {
+            Network network = connectivityManager.getActiveNetwork();
+            if (network != null) {
+                NetworkCapabilities networkCapabilities = connectivityManager.getNetworkCapabilities(network);
+                return networkCapabilities != null &&
+                        (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                                networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                                networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET));
+            }
+        }
+        return false;
+    }
+    private List<String> updateRecognizedWordsToBackend() {
+        List<String> recognizedWordsList = new ArrayList<>();
+        String filename = fragment_file;
+        File file = new File(getActivity().getExternalFilesDir(null), filename);
+
+        if (file.exists()) {
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(file));
+                String line;
+                while ((line = br.readLine()) != null) {
+                    recognizedWordsList.add(line);
+                    System.out.println(line); // Print each line to the console
+                }
+                br.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println(fragment_file + " does not exist.");
+        }
+        System.out.println(recognizedWordsList);
+        return recognizedWordsList;
+    }
+    private void clearRecognizedCropsFile() {
+        String filename = fragment_file;
+        File file = new File(getActivity().getExternalFilesDir(null), filename);
+
+        try {
+            FileWriter fileWriter = new FileWriter(file);
+            fileWriter.write(""); // Write an empty string to truncate the file
+            fileWriter.close();
+            System.out.println("Cleared contents of " + fragment_file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

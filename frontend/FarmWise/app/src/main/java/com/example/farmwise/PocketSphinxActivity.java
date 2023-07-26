@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
@@ -36,21 +37,31 @@ public class PocketSphinxActivity extends Activity implements
 
     /* Keyword we are looking for to activate menu */
     private static final String KEYPHRASE = "farm wise";
+    private static final String REMOVE = "remove";
 
     /* Used to handle permission request */
     private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 1;
 
     private SpeechRecognizer recognizer;
     private HashMap<String, Integer> captions;
+    private String fragment_file;
+    private String action;
 
     @Override
     public void onCreate(Bundle state) {
         super.onCreate(state);
+        fragment_file = getIntent().getStringExtra("fragment");
+        action = getIntent().getStringExtra("action");
 
         // Prepare the data for UI
         captions = new HashMap<>();
-        captions.put(KWS_SEARCH, R.string.collect_caption);
-        captions.put(DIGITS_SEARCH, R.string.digits_caption);
+        if (action == "collected") {
+            captions.put(KWS_SEARCH, R.string.collect_caption);
+            captions.put(DIGITS_SEARCH, R.string.digits_caption);
+        } else {
+            captions.put(KWS_SEARCH, R.string.sold_key_caption);
+            captions.put(DIGITS_SEARCH, R.string.sold_caption);
+        }
         setContentView(R.layout.sphinx);
         ((TextView) findViewById(R.id.caption_text))
                 .setText("Preparing the recognizer");
@@ -140,6 +151,42 @@ public class PocketSphinxActivity extends Activity implements
         else
             ((TextView) findViewById(R.id.result_text)).setText(text);
     }
+    private void removeLastLine() {
+        String filePath = fragment_file;
+        try {
+            // Read the entire content of the file
+            File file = new File(filePath);
+            RandomAccessFile raf = new RandomAccessFile(file, "rw");
+            long length = raf.length();
+
+            if (length == 0) {
+                // File is empty, nothing to remove
+                raf.close();
+                return;
+            }
+
+            // Move the file pointer to the end
+            raf.seek(length - 1);
+
+            // Find the last newline character (start from the end)
+            int lastByte;
+            while ((lastByte = raf.read()) != -1) {
+                if (lastByte == '\n') {
+                    break;
+                }
+                raf.seek(raf.getFilePointer() - 2); // Move 2 positions back to avoid reading the same byte twice
+            }
+
+            // Truncate the file from the last newline character
+            raf.setLength(raf.getFilePointer());
+
+            raf.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        printRecognizedWords();
+    }
+
 
     /**
      * This callback is called when we stop the recognizer.
@@ -176,10 +223,10 @@ public class PocketSphinxActivity extends Activity implements
     }
     private void saveRecognizedWordsToFile(String recognizedWords) {
         try {
-            recognizedWords = "collected " + recognizedWords;
+            recognizedWords = action + " " + recognizedWords;
             File externalFilesDir = getExternalFilesDir(null); // Get the app-specific external directory
             if (externalFilesDir != null) {
-                File file = new File(externalFilesDir, "recognized_crops.txt");
+                File file = new File(externalFilesDir, fragment_file);
 
                 FileOutputStream fos = new FileOutputStream(file, true); // Pass "true" for append mode
                 fos.write(recognizedWords.getBytes());
@@ -197,7 +244,7 @@ public class PocketSphinxActivity extends Activity implements
         }
     }
     private void printRecognizedWords() {
-        String filename = "recognized_crops.txt";
+        String filename = fragment_file;
         File file = new File(getExternalFilesDir(null), filename);
 
         if (file.exists()) {

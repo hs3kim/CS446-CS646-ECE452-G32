@@ -67,6 +67,7 @@ public class FarmFragment extends Fragment {
     private String mParam2;
 
     private TextView statusTextView;
+    private String fragment_file;
 
     public FarmFragment() {
         // Required empty public constructor
@@ -102,6 +103,9 @@ public class FarmFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        SharedPreferences codePreference = getContext().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        String activeFarmCode = codePreference.getString("activeFarmCode", "");
+        fragment_file = "farm" + activeFarmCode + ".txt";
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_farm, container, false);
 
@@ -117,6 +121,8 @@ public class FarmFragment extends Fragment {
             public void onClick(View v) {
                 // Start the PocketSphinxActivity when the button is clicked
                 Intent intent = new Intent(requireContext(), PocketSphinxActivity.class);
+                intent.putExtra("fragment", fragment_file);
+                intent.putExtra("action", "collected");
                 startActivity(intent);
             }
         });
@@ -245,7 +251,7 @@ public class FarmFragment extends Fragment {
     }
     private List<String> updateRecognizedWordsToBackend() {
         List<String> recognizedWordsList = new ArrayList<>();
-        String filename = "recognized_crops.txt";
+        String filename = fragment_file;
         File file = new File(getActivity().getExternalFilesDir(null), filename);
 
         if (file.exists()) {
@@ -267,7 +273,7 @@ public class FarmFragment extends Fragment {
         return recognizedWordsList;
     }
     private void clearRecognizedCropsFile() {
-        String filename = "recognized_crops.txt";
+        String filename = fragment_file;
         File file = new File(getActivity().getExternalFilesDir(null), filename);
 
         try {

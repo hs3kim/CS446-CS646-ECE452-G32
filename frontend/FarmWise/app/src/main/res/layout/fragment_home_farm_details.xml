@@ -47,7 +47,7 @@
             />
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/back_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginVertical="10dp"
@@ -71,133 +71,15 @@
             android:layout_marginTop="10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView"
+            app:layout_constraintTop_toBottomOf="@+id/back_button"
             app:layout_constraintBottom_toBottomOf="parent"
             >
 
             <LinearLayout
+                android:id="@+id/container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                <FrameLayout
-                    android:id="@+id/itemCardFrame"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/inventoryItemCard"
-                        android:layout_width="150dp"
-                        android:layout_height="200dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginVertical="10dp"
-                        app:cardBackgroundColor="@color/cardview_green"
-                        app:cardCornerRadius="8dp"
-                        app:cardElevation="5dp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                        <ImageView
-                            android:layout_width="120dp"
-                            android:layout_height="120dp"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_margin="20dp"
-                            android:elevation="3dp"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/corn" />
-
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom|left"
-                            android:layout_marginLeft="20dp"
-                            android:layout_marginTop="20dp"
-                            android:layout_marginBottom="10dp"
-                            android:elevation="3dp"
-                            >
-                            <TextView
-                                android:id="@+id/farm_name"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Name: Corn"
-                                android:textSize="14sp" />
-                            <TextView
-                                android:id="@+id/farm_code"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_below="@id/farm_name"
-                                android:text="Count: 200" />
-                        </RelativeLayout>
-
-
-                        <ImageButton
-                            android:id="@+id/delete_item"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom|right"
-                            android:src="@drawable/baseline_delete_24" />
-
-                    </androidx.cardview.widget.CardView>
-
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/inventoryItemCard2"
-                        android:layout_width="150dp"
-                        android:layout_height="200dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginVertical="10dp"
-                        app:cardBackgroundColor="@color/cardview_green"
-                        app:cardCornerRadius="8dp"
-                        app:cardElevation="5dp"
-                        android:layout_gravity="top|right"
-                        >
-
-                        <ImageView
-                            android:layout_width="120dp"
-                            android:layout_height="120dp"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_margin="20dp"
-                            android:elevation="3dp"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/apple" />
-
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom|left"
-                            android:layout_marginLeft="20dp"
-                            android:layout_marginTop="20dp"
-                            android:layout_marginBottom="10dp"
-                            android:elevation="3dp"
-                            >
-                            <TextView
-                                android:id="@+id/farm_name2"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Name: Apple"
-                                android:textSize="14sp" />
-                            <TextView
-                                android:id="@+id/farm_code2"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Count: 80"
-                                android:layout_below="@id/farm_name2"
-                                />
-                        </RelativeLayout>
-
-
-                        <ImageButton
-                            android:id="@+id/delete_item2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom|right"
-                            android:src="@drawable/baseline_delete_24" />
-
-                    </androidx.cardview.widget.CardView>
-
-                </FrameLayout>
-
-
-
-
-
             </LinearLayout>
         </ScrollView>
 

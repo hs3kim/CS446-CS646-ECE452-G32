@@ -590,8 +590,13 @@ public class HomeFragment extends Fragment {
         card.setOnClickListener(new View.OnClickListener() {
             @Override
             public  void onClick(View v) {
-                Snackbar.make(view, "View " + farmName, Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Viewing " + farmName, Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
+
+                SharedPreferences sharedPreferences = getContext().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("activeFarmCode", farmCode);
+                editor.commit();
 
                 replaceFragment(new fragment_home_farm_details());
             }

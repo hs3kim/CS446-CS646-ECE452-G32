@@ -174,6 +174,13 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        binding.profileIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                replaceFragment(new ProfileFragment());
+            }
+        });
+
 
         return view;
     }

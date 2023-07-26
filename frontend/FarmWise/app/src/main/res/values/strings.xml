@@ -20,6 +20,7 @@
     <string name="home_FAB_desc"></string>
     <string name="home_search_hint">Farm search</string>
     <string name="count">count: </string>
+    <string name="item_value">item value: $</string>
     <string name="placeholder">placeholder</string>
 
     <string name="farmFragment">farm fragment</string>

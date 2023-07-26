@@ -435,7 +435,7 @@ public class HomeFragment extends Fragment {
                                                         View homeView = binding.getRoot();
                                                         if (status.equals("SUCCESS")) {
                                                             // create toast for successs
-                                                            Snackbar.make(homeView, "Successfully left the farm", Snackbar.LENGTH_LONG)
+                                                            Snackbar.make(homeView, "Successfully left " + farmName, Snackbar.LENGTH_LONG)
                                                                     .setAction("Action", null).show();
                                                             binding.container.removeView(view);
                                                         } else {
@@ -488,11 +488,83 @@ public class HomeFragment extends Fragment {
                 }
             });
         } else {
+            leave.setVisibility(View.GONE);
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setMessage("Are you sure you want to delete " + farmName + "?")
+                            .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    String reqURL = "https://farmwise.onrender.com/api/farm/remove";
+                                    JSONObject jsonReqBody = new JSONObject();
+                                    try {
+                                        jsonReqBody.put("farmCode", farmCode);
+                                    }
+                                    catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    final String mRequestBody = jsonReqBody.toString();
+                                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                                            (Request.Method.POST, reqURL, null, new Response.Listener<JSONObject>() {
+                                                @Override
+                                                public void onResponse(JSONObject response) {
+                                                    String status;
+                                                    try {
+                                                        status = response.getString("status");
+                                                        View homeView = binding.getRoot();
+                                                        if (status.equals("SUCCESS")) {
+                                                            // create toast for successs
+                                                            Snackbar.make(homeView, "Successfully deleted " + farmName, Snackbar.LENGTH_LONG)
+                                                                    .setAction("Action", null).show();
+                                                            binding.container.removeView(view);
+                                                        } else {
+                                                            Snackbar.make(homeView, response.getString("statusMsg"), Snackbar.LENGTH_LONG)
+                                                                    .setAction("Action", null).show();
+                                                        }
+                                                    } catch (JSONException e) {
+                                                        status = "error parsing JSON";
+                                                    }
+                                                }
+                                            }, new Response.ErrorListener() {
+                                                @Override
+                                                public void onErrorResponse(VolleyError error) {
+                                                    // display error msg
+                                                }
+                                            }) {
+                                        @Override
+                                        public Map<String, String> getHeaders() throws AuthFailureError {
+                                            HashMap header = new HashMap();
+                                            header.put("Content-Type", "application/json");
+                                            header.put("Cookie", sharedPreferences.getString("JWTKey", ""));
 
-                    binding.container.removeView(view);
+                                            return header;
+                                        }
+                                        @Override
+                                        public byte[] getBody() {
+                                            try {
+                                                return mRequestBody == null ? null : mRequestBody.getBytes("utf-8");
+                                            }
+                                            catch (UnsupportedEncodingException uee) {
+                                                return null;
+                                            }
+                                        }
+                                        @Override
+                                        public String getBodyContentType() {
+                                            return "application/json; charset=utf-8";
+                                        }
+                                    };
+                                    RequestQueue requestQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
+                                    requestQueue.add(jsonObjectRequest);
+                                }
+                            })
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // User cancelled dialog
+                                }
+                            });
+                    leaveConfirmationDialog = builder.create();
+                    leaveConfirmationDialog.show();
                 }
             });
         }

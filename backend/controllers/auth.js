@@ -17,7 +17,7 @@ exports.registerUser = async (req, res) => {
 
   res
     .status(201)
-    .setHeader("Set-Cookie", `FarmWiseKey=${jwtToken}`)
+    .setHeader("JWTAuthToken", `FarmWiseKey=${jwtToken}`)
     .json(formatSuccessResponse(createdUser));
 };
 
@@ -34,7 +34,7 @@ exports.loginUser = async (req, res) => {
 
   res
     .status(200)
-    .setHeader("Set-Cookie", `FarmWiseKey=${jwtToken}`)
+    .setHeader("JWTAuthToken", `FarmWiseKey=${jwtToken}`)
     .json(formatSuccessResponse(user));
 };
 

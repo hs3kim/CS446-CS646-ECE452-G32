@@ -37,8 +37,8 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/farmCard"
-        android:layout_width="273dp"
-        android:layout_height="73dp"
+        android:layout_width="248dp"
+        android:layout_height="97dp"
         android:layout_marginHorizontal="20dp"
         android:layout_marginVertical="270dp"
         android:layout_marginBottom="361dp"
@@ -123,7 +123,35 @@
                 android:layout_marginLeft="0dp"
                 android:layout_toRightOf="@id/textemail"
                 app:srcCompat="@drawable/create" />
+
+
+            <ImageView
+                android:id="@+id/imageView7"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_below="@id/textUser"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="26dp"
+                android:layout_toRightOf="@id/textemail"
+                app:srcCompat="@drawable/create" />
+
+            <TextView
+                android:id="@+id/textPassword"
+                android:layout_width="77dp"
+                android:layout_height="26dp"
+                android:layout_below="@id/textEmail"
+                android:text="Password:" />
+
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="131dp"
+                android:layout_height="26dp"
+                android:layout_below="@id/textEmail"
+                android:layout_toRightOf="@id/textPassword"
+                android:text="******" />
+
         </RelativeLayout>
+
 
     </androidx.cardview.widget.CardView>
 

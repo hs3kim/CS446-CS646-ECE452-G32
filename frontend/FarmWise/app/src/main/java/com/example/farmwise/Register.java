@@ -1,6 +1,8 @@
 package com.example.farmwise;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -15,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Cache;
 import com.android.volley.Network;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -132,6 +135,20 @@ public class Register extends AppCompatActivity {
 //                        headers.put("Content-Type", "application/json");
                         headers.put("Authorization", "");
                         return headers;
+                    }
+                    @Override
+                    protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                        assert response.headers != null;
+                        String JWT = response.headers.get("jwtauthtoken");
+//                        Log.d("JWT", " :" + JWT);
+                        // Use code to set JWT token value to file
+                        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        // set value here as JWT token retrieved
+                        editor.putString("JWTKey", JWT);
+                        editor.apply();
+
+                        return super.parseNetworkResponse(response);
                     }
                 };
 

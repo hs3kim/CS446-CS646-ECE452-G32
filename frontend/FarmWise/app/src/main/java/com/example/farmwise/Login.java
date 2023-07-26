@@ -61,6 +61,13 @@ public class Login extends AppCompatActivity {
             }
         });
 
+        // Use code to set JWT token value to file
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        // set value here as JWT token retrieved
+        editor.putString("JWTKey", "value");
+        editor.commit();
+
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

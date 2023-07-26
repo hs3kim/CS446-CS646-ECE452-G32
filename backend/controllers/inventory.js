@@ -4,7 +4,7 @@ const farmService = require("../services/farmService");
 const { getQueryDict } = require("../utils/parseText");
 const { formatSuccessResponse } = require("../utils/formatResponse");
 
-exports.addInventory = async (req, res) => {
+exports.updateInventory = async (req, res) => {
   const { texts, farmCode } = req.body;
   if (!farmCode || !texts || !Array.isArray(texts)) {
     throw new AppError("BAD_REQUEST");
@@ -12,7 +12,11 @@ exports.addInventory = async (req, res) => {
 
   for (const text of texts) {
     const query = getQueryDict(text);
-    await inventoryService.addCropInventory(farmCode, query);
+    if (query.action == "remove") {
+      await inventoryService.removeCropInventory(farmCode, query.dict);
+    } else {
+      await inventoryService.addCropInventory(farmCode, query.dict);
+    }
   }
 
   res.status(201).json(formatSuccessResponse(null));

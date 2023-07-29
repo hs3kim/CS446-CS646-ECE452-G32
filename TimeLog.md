@@ -8,13 +8,13 @@
 | 2023/06/18 |    0   |     6    |    0   |     0     |     0    |    0    | login&registration figma
 | 2023/06/20 |    0   |     0    |    0   |     0     |     3    |    6    | voice rec - investigating storing audio offline
 | 2023/06/21 |    0   |     0    |    0   |     2     |     0    |    0    | backend setup
-| 2023/06/22 |    0   |     0    |    0   |     2     |     0    |    4    | figma homepage
-| 2023/06/23 |    0   |     0    |    0   |     7     |     4    |    3    | auth endpoints, deploy backend / investigating offline voice rec solution aimybox / figma charity
+| 2023/06/22 |    0   |     0    |    0   |     2     |     0    |    4    | figma homepage/edit farm/Fab options/ add farm/join farm
+| 2023/06/23 |    0   |     0    |    0   |     7     |     4    |    3    | auth endpoints, deploy backend / investigating offline voice rec solution aimybox / figma charity/select inventory
 | 2023/06/24 |    2   |     8    |    0   |     0.1   |     0    |    0    | navbar/login&registration/cors
-| 2023/06/25 |    0   |     0    |    7   |     2     |     0    |    6    | NLP/inventory endpoint / figma market&profile
+| 2023/06/25 |    0   |     0    |    7   |     2     |     0    |    6    | NLP/inventory endpoint / figma market/order details/ show profit/&profile
 | 2023/06/27 |    10  |     0    |    0   |     3     |     0    |    0    | home tab & farm details / farm endpoint
 | 2023/06/28 |    5   |     5    |    5   |     5     |     5    |    5    | d3
-| 2023/07/06 |    0   |     0    |    0   |     0     |     0    |    6    | figma inventory
+| 2023/07/06 |    0   |     0    |    0   |     0     |     0    |    7    | figma inventory/ add items/ edit items/farm page/ add quantity/
 | 2023/07/13 |    4   |     4    |    4   |     4     |     4    |    4    | d4
 | 2023/07/20 |    4   |     4    |    4   |     4     |     4    |    4    | d5
 | 2023/07/20 |    0   |     0    |    0   |     0     |     6    |    0    | sphinx offline voice rec

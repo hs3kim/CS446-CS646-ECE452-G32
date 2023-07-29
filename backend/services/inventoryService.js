@@ -5,6 +5,10 @@ const { AppError } = require("../utils/errors");
 exports.addCropInventory = async (farmCode, productInfo) => {
   const farm = await Farm.findOne({ code: farmCode });
   const product = productInfo.item;
+  if (product == undefined) {
+    // most likely error in voice recognition
+    throw new AppError("BAD_REQUEST", "Product is undefined");
+  }
   const count = productInfo.quantity;
   if (!farm) {
     throw new AppError("BAD_REQUEST", "Farm Does Not Exist");
@@ -34,6 +38,10 @@ exports.addCropInventory = async (farmCode, productInfo) => {
 exports.removeCropInventory = async (farmCode, productInfo) => {
   const farm = await Farm.findOne({ code: farmCode });
   const product = productInfo.item;
+  if (product == undefined) {
+    // most likely error in voice recognition
+    throw new AppError("BAD_REQUEST", "Product is undefined");
+  }
   const count = productInfo.quantity;
   if (!farm) {
     throw new AppError("BAD_REQUEST", "Farm Does Not Exist");

@@ -15,11 +15,24 @@ exports.getQueryDict = (text) => {
   classifier.addDocument("Add 50 apples", "add");
   classifier.addDocument("Collected ten apples", "add");
   classifier.addDocument("Picked up fifty apples", "add");
-  classifier.addDocument("remove 100 apples", "remove");
+  classifier.addDocument("remove one hundred apples", "remove");
   classifier.addDocument("remove 100 blueberries", "remove");
   classifier.addDocument("I sold eleven apples", "remove");
   classifier.addDocument("gave away seventeen apples", "remove");
   classifier.addDocument("donate 55 apples", "remove");
+  classifier.addDocument("Add 50 oranges", "add");
+  classifier.addDocument("Acquired two hundred strawberries", "add");
+  classifier.addDocument("Add thirty tomatoes", "add");
+  classifier.addDocument("Acquired two hundred cucumbers", "add");
+  classifier.addDocument("Sold fifty beans", "remove");
+  classifier.addDocument("Sold twenty peppers", "remove");
+  classifier.addDocument("Sold forty lettuce", "remove");
+  classifier.addDocument("Sold twenty-five spinach", "remove");
+  classifier.addDocument("Sold eighty onions", "remove");
+  classifier.addDocument("Sold sixty broccoli", "remove");
+  classifier.addDocument("Sold five hundred carrots", "remove");
+  classifier.addDocument("Sold thirty tomatoes", "remove");
+
   classifier.train();
 
   const tokenizer = new natural.WordTokenizer();

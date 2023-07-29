@@ -18,9 +18,9 @@
 | 2023/07/13 |    4   |     4    |    4   |     4     |     4    |    4    | d4
 | 2023/07/20 |    4   |     4    |    4   |     4     |     4    |    4    | d5
 | 2023/07/20 |    0   |     0    |    0   |     0     |     6    |    0    | sphinx offline voice rec
-| 2023/07/22 |    0   |     0    |    0   |     3     |     2    |    0    | user endpoint / crop grammar
+| 2023/07/22 |    0   |     0    |    1   |     3     |     2    |    0    | user endpoint / crop grammar / edit user profile
 | 2023/07/23 |    3   |     0    |    10  |     4     |     0    |    0    | homefragment / NLP & endpoint to change user pass / enroll worker
 | 2023/07/24 |    5   |     0    |    0   |     1     |     0    |    0    | join&create farm / remove worker from farm
-| 2023/07/25 |    5   |     0    |    0   |     1     |     6    |    0    | delete&leave farm / integrate voice rec, backend integration / bugfix
-| 2023/07/26 |    12  |     4    |    4   |     5.5   |     7    |    6    | frontend / fix cookie / integrate market voice rec / edit profile --DEMO FOR ALL
+| 2023/07/25 |    5   |     0    |    1   |     1     |     6    |    0    | delete&leave farm / integrate voice rec, backend integration / bugfix
+| 2023/07/26 |    12  |     4    |    4.5   |     5.5   |     7    |    6    | frontend / fix cookie / modify training model / integrate market voice rec / edit profile --DEMO FOR ALL
 | 2023/07/27 |    6   |     6    |    6   |     6     |     6    |    6    | d6
